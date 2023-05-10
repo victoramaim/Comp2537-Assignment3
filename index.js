@@ -70,7 +70,89 @@ const paginate = async (currentPage, PAGE_SIZE, pokemons) => {
 
 const setup = async () => {
   // test out poke api using axios here
-
+  $('.pokemonFilter').html(`
+    <div class="form-check form-check-inline">
+      <input class="form-check-input typeChk" type="checkbox" typeurl="https://pokeapi.co/api/v2/type/1/">
+      <label class="form-check-label" for="inlineCheckbox1">Normal</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input typeChk" type="checkbox" typeurl="https://pokeapi.co/api/v2/type/2/">
+      <label class="form-check-label" for="inlineCheckbox2">Fighting</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input typeChk" type="checkbox" typeurl="https://pokeapi.co/api/v2/type/3/">
+      <label class="form-check-label" for="inlineCheckbox3">Flying</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input typeChk" type="checkbox" typeurl="https://pokeapi.co/api/v2/type/4/">
+      <label class="form-check-label" for="inlineCheckbox4">Poison</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input typeChk" type="checkbox" typeurl="https://pokeapi.co/api/v2/type/5/">
+      <label class="form-check-label" for="inlineCheckbox5">Ground</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input typeChk" type="checkbox" typeurl="https://pokeapi.co/api/v2/type/6/">
+      <label class="form-check-label" for="inlineCheckbox6">Rock</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input typeChk" type="checkbox" typeurl="https://pokeapi.co/api/v2/type/7/">
+      <label class="form-check-label" for="inlineCheckbox7">Bug</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input typeChk" type="checkbox" typeurl="https://pokeapi.co/api/v2/type/8/">
+      <label class="form-check-label" for="inlineCheckbox8">Ghost</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input typeChk" type="checkbox"  typeurl="https://pokeapi.co/api/v2/type/9/">
+      <label class="form-check-label" for="inlineCheckbox9">Steel</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input typeChk"  type="checkbox" typeurl="https://pokeapi.co/api/v2/type/10/">
+      <label class="form-check-label" for="inlineCheckbox10">Fire</label>
+    </div>  
+    <div class="form-check form-check-inline">
+      <input class="form-check-input typeChk"  type="checkbox" typeurl="https://pokeapi.co/api/v2/type/11/">
+      <label class="form-check-label" for="inlineCheckbox11">Water</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input typeChk"  type="checkbox" typeurl="https://pokeapi.co/api/v2/type/12/">
+      <label class="form-check-label" for="inlineCheckbox12">Grass</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input typeChk"  type="checkbox" typeurl="https://pokeapi.co/api/v2/type/13/">
+      <label class="form-check-label" for="inlineCheckbox13">Electric</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input typeChk"  type="checkbox" typeurl="https://pokeapi.co/api/v2/type/14/">
+      <label class="form-check-label" for="inlineCheckbox14">Psychic</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input typeChk"  type="checkbox" typeurl="https://pokeapi.co/api/v2/type/15/">
+      <label class="form-check-label" for="inlineCheckbox15">Ice</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input typeChk"  type="checkbox" typeurl="https://pokeapi.co/api/v2/type/16/">
+      <label class="form-check-label" for="inlineCheckbox16">Dragon</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input typeChk" type="checkbox"  typeurl="https://pokeapi.co/api/v2/type/17/">
+      <label class="form-check-label" for="inlineCheckbox17">Dark</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input typeChk"  type="checkbox" typeurl="https://pokeapi.co/api/v2/type/18/">
+      <label class="form-check-label" for="inlineCheckbox18">Fairy</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input typeChk" type="checkbox" typeurl="https://pokeapi.co/api/v2/type/19/">
+      <label class="form-check-label" for="inlineCheckbox19">Unknown</label>
+    </div>
+    <div class="form-check form-check-inline">
+      <input class="form-check-input typeChk"  type="checkbox" typeurl="https://pokeapi.co/api/v2/type/20/">
+      <label class="form-check-label" for="inlineCheckbox20">Shadow</label>
+    </div>
+  `)
+    
 
   $('#pokeCards').empty()
   let response = await axios.get('https://pokeapi.co/api/v2/pokemon?offset=0&limit=810');
@@ -88,11 +170,22 @@ const setup = async () => {
     }
     console.log("selected_types: ", selected_types);
 
-    const typeurl = $(this).attr('typeurl')
-    console.log("typeurl: ", typeurl);
-    const res = await axios.get(`${typeurl}`)
-    console.log("res.data.pokemon: ", res.data.pokemon);
-    pokemons = res.data.pokemon.map((pokemon) => pokemon.pokemon);
+    let filtered_pokemons = [];
+
+    for (let i = 0; i < selected_types.length; i++) {
+      filtered_pokemons.push((await axios.get(selected_types[i])).data.pokemon.map((pokemon) => pokemon.pokemon));
+    }
+    
+    console.log("filtered_pokemons: ", filtered_pokemons);
+
+
+    if (selected_types.length != 0) {
+    pokemons = filtered_pokemons.reduce((a,b) => a.filter(c => b.some(d => d.name === c.name)));
+    } else {
+      pokemons = response.data.results;
+    }
+
+    console.log("pokemons: ", pokemons);
     paginate(currentPage, PAGE_SIZE, pokemons)
     const numPages = Math.ceil(pokemons.length / PAGE_SIZE)
     updatePaginationDiv(currentPage, numPages);
