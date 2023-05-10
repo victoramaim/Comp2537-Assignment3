@@ -1,6 +1,7 @@
 const PAGE_SIZE = 10;
 let currentPage = 1;
-let pokemons = []
+let pokemons = [];
+let selected_types = [];
 
 const updatePaginationDiv = (currentPage, numPages) => {
   $('#pagination').empty().addClass('d-flex justify-content-center');
@@ -78,8 +79,24 @@ const setup = async () => {
   paginate(currentPage, PAGE_SIZE, pokemons)
   const numPages = Math.ceil(pokemons.length / PAGE_SIZE)
   updatePaginationDiv(currentPage, numPages)
+ 
+  $('body').on('click', '.typeChk', async function (e) {
+    if ($(this).is(':checked')) {
+      selected_types.push($(this).attr('typeurl'))
+    } else {
+      selected_types = selected_types.filter((type) => type !== $(this).attr('typeurl'))
+    }
+    console.log("selected_types: ", selected_types);
 
-
+    const typeurl = $(this).attr('typeurl')
+    console.log("typeurl: ", typeurl);
+    const res = await axios.get(`${typeurl}`)
+    console.log("res.data.pokemon: ", res.data.pokemon);
+    pokemons = res.data.pokemon.map((pokemon) => pokemon.pokemon);
+    paginate(currentPage, PAGE_SIZE, pokemons)
+    const numPages = Math.ceil(pokemons.length / PAGE_SIZE)
+    updatePaginationDiv(currentPage, numPages);
+  })
 
   // pop up modal when clicking on a pokemon card
   // add event listener to each pokemon card
